@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'django_filters',
     'users',
     'courses',
 ]
@@ -79,7 +80,7 @@ WSGI_APPLICATION = 'DRF_homeworks.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'DRF_database',
         'USER': 'postgres',
         'PASSWORD': 'hghghg777'

@@ -1,0 +1,14 @@
+[
+  {
+    "model": "users.payment",
+    "pk": 3,
+    "fields": {
+      "user": null,
+      "date": "2025-05-26T01:14:32.820Z",
+      "course": null,
+      "lesson": 2,
+      "cost": 150,
+      "way_of_payment": "Перевод"
+    }
+  }
+]
