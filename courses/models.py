@@ -1,4 +1,5 @@
 from django.db import models
+from DRF_homeworks import settings
 
 
 class Course(models.Model):
@@ -6,6 +7,7 @@ class Course(models.Model):
     title = models.CharField(max_length=150, verbose_name='Название')
     preview = models.ImageField(upload_to='previews/', null=True, blank=True, verbose_name='Превью')
     description = models.TextField(verbose_name='Описание')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Курс'
@@ -22,3 +24,8 @@ class Lesson(models.Model):
     description = models.TextField(verbose_name='Описание')
     preview = models.ImageField(upload_to='lesson_prewivews/', null=True, blank=True, verbose_name='Превью')
     link = models.URLField(verbose_name='Ссылка')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Урок'
+        verbose_name_plural = 'Уроки'
