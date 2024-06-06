@@ -6,7 +6,8 @@ from courses.views import (CoursesViewSet,
                            LessonRetrieveAPIView,
                            LessonUpdateAPIView,
                            LessonDestroyAPIView,
-                           SubscriptionAPIView)
+                           SubscriptionAPIView,
+                           PaymentCreateAPIView,)
 from django.urls import path
 
 
@@ -22,4 +23,5 @@ urlpatterns = [
     path('lessons/update/<int:pk>/', LessonUpdateAPIView.as_view(), name='lesson_update'),
     path('lessons/delete/<int:pk>/', LessonDestroyAPIView.as_view(), name='lesson_delete'),
     path('courses/<int:pk>/subscription', SubscriptionAPIView.as_view(), name='course_subscription'),
+    path('payment/', PaymentCreateAPIView.as_view(), name='payment_create'),
 ] + router.urls

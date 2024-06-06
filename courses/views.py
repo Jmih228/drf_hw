@@ -1,11 +1,15 @@
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from rest_framework import viewsets, generics
-from courses.serializers import CoursesSerializer, LessonSerializer, SubscriptionSerializer
-from courses.models import Course, Lesson, Subscription
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from courses.serializers import (CoursesSerializer,
+                                 LessonSerializer,
+                                 SubscriptionSerializer,
+                                 PaymentSerializer,)
+from courses.models import Course, Lesson, Subscription, Payment
+from rest_framework.permissions import IsAuthenticated
 from users.permissions import IsNotStaff, IsOwner
 from courses.paginators import CoursesPaginator, LessonsPaginator
+from courses.services import creating_stripe_price, create_stripe_session
 
 
 class CoursesViewSet(viewsets.ModelViewSet):
@@ -76,7 +80,7 @@ class SubscriptionAPIView(generics.GenericAPIView):
     def post(self, *args, **kwargs):
 
         user = self.request.user
-        course_id = self.request.data['course']
+        course_id = self.request.parser_context['kwargs']['pk']
         course_item = get_object_or_404(Course, pk=course_id)
 
         subs_item = Subscription.objects.filter(user=user, course=course_id)
@@ -89,3 +93,16 @@ class SubscriptionAPIView(generics.GenericAPIView):
             message = 'подписка оформлена'
 
         return HttpResponse(message)
+
+
+class PaymentCreateAPIView(generics.CreateAPIView):
+    serializer_class = PaymentSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = Payment.objects.all()
+
+    def perform_create(self, serializer):
+        payment = serializer.save(user=self.request.user)
+        price = creating_stripe_price(payment.amount)
+        session_id, payment_link = create_stripe_session(price)
+        payment.session_id, payment.link = session_id, payment_link
+        payment.save()

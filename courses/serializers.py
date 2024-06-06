@@ -1,6 +1,13 @@
 from rest_framework import serializers
-from courses.models import Course, Lesson, Subscription
+from courses.models import Course, Lesson, Subscription, Payment
 from courses.validators import TitleLinksValidator, DescriptionLinksValidator
+
+
+class PaymentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Payment
+        fields = '__all__'
 
 
 class LessonSerializer(serializers.ModelSerializer):
@@ -29,7 +36,7 @@ class CoursesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ('title', 'description', 'owner', 'lessons_count', 'lessons', 'is_subscribed')
+        fields = ('id', 'title', 'description', 'owner', 'lessons_count', 'lessons', 'is_subscribed')
 
     def get_lessons_count(self, instance):
         return len(Lesson.objects.filter(id=instance.id))
